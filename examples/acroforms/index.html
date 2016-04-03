@@ -3,6 +3,16 @@
 
 <head>
   <script src="../../node_modules/requirejs/require.js"></script>
+  
+  <link rel="stylesheet" href="../../web/text_layer_builder.css" />
+  
+  <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+  
+  
+<!--<script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../../web/ui_utils.js"></script>
+<script src="../../web/text_layer_builder.js"></script>-->
+
 
   <style>
   .pdfpage { position:relative; top: 0; left: 0; border: solid 1px black; margin: 10px; }
@@ -17,7 +27,32 @@
 </head>
 
 <body>
-  <div id="viewer"></div>
+    
+    
+    <div id='theFormValues'></div>
+    
+    <script>
+            $(function() {
+        
+                $('#theButton').click(function() {
+                    
+                    var serArray = $('#theForm').serializeArray();
+                    
+                    var output = JSON.stringify(serArray);
+                    
+                    $('#theFormValues').html(output);    
+                });
+                
+                
+            });
+    </script>
+    
+    <button id='theButton'>Show Inputs</button>
+    
+    <form id='theForm'>
+        <div id="viewer"></div>
+    </form>
+    
 </body>
 
 </html>

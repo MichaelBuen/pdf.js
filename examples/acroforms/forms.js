@@ -6,7 +6,7 @@
 'use strict';
 
 // Specify the PDF with AcroForm here
-var pdfWithFormsPath = '../../test/pdfs/f1040.pdf';
+var pdfWithFormsPath = 'i-9.pdf';
 
 var formFields = {};
 
@@ -122,6 +122,9 @@ function renderPage(div, pdf, pageNumber, callback) {
     canvas.width = pageDisplayWidth;
     canvas.height = pageDisplayHeight;
     pageDivHolder.appendChild(canvas);
+    
+    
+    
 
     // Render PDF page into canvas context
     var renderContext = {
@@ -131,16 +134,69 @@ function renderPage(div, pdf, pageNumber, callback) {
     page.render(renderContext).promise.then(callback);
 
     // Prepare and populate form elements layer
-    var formDiv = document.createElement('div');
+    var formDiv = document.createElement('div');   
     pageDivHolder.appendChild(formDiv);
+    
+   
+    
+    // Kel..
+    
+    
+    var textLayerDiv = document.createElement('div');
+    textLayerDiv.className = 'textLayer'; 
+    // textLayerDiv.style.background = 'red';
+    formDiv.appendChild(textLayerDiv);
+    
+
+    var canvasOffset = $(canvas).offset();
+    var $textLayerDiv = $(textLayerDiv).css({
+            height : viewport.height+'px',
+            width : viewport.width+'px',
+            top : 0, 
+            left : 0 
+        });
+
+        console.log('ctop ' + canvasOffset.top);
+        console.log('cleft ' + canvasOffset.left);
+
+
+        page.getTextContent().then(function(textContent){
+        var textLayer = new TextLayerBuilder({
+            textLayerDiv : textLayerDiv,
+            pageIndex :  pageNumber - 1,
+            viewport : viewport
+        });
+
+        textLayer.setTextContent(textContent);
+        console.log('text content');
+        console.log( textContent);
+        textLayer.render();
+        console.log('pn ' + pageNumber);
+    });
+    
+    
+    // ..Kel    
+
 
     setupForm(formDiv, page, viewport);
+    
+
+    
   });
 }
 
 // In production, the bundled pdf.js shall be used instead of RequireJS.
 require.config({paths: {'pdfjs': '../../src'}});
-require(['pdfjs/display/api'], function (api) {
+require([
+    'pdfjs/display/api',
+    '../../node_modules/jquery/dist/jquery.min.js',
+    '../../web/ui_utils.js',
+    '../../web/text_layer_builder.js',
+    'pdfjs/display/text_layer'
+    ], function (api) {
+        
+        
+        
   // In production, change this to point to the built `pdf.worker.js` file.
   PDFJS.workerSrc = '../../src/worker_loader.js';
 
